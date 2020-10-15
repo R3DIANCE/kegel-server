@@ -49,6 +49,32 @@ namespace kolbenV2
             player.Health = 0;
         }
 
+        [ClientEvent("ban")]
+        public void ban(Player player, string [] args)
+        {
+            if (player.IsAdmin)
+            {
+                if(args.Length == 2)
+                {
+                    foreach(Player players in Alt.GetAllPlayers())
+                    {
+                        if(players.PlayerName == args[0])
+                        {
+                            Database db = new Database();
+                            db.Insert($"INSERT INTO banned_accounts (socialclubid,reason) VALUES ('{players.SocialClubId}', '{args[1]}')");
+                            players.Kick("BANNED: " + args[1]);
+                            Chat.GloabAdminMessage($"{players.PlayerName} wurde gebannt! Grund: {args[1]}");
+                        }
+                    }
+                   
+                }
+                else
+                {
+                    player.SendNotificationRed("/ban (name) (grund)");
+                }
+            }
+        }
+
         [ClientEvent("adminmessage")]
         public void adminmessage(Player player, string[] args)
         {
@@ -217,14 +243,15 @@ namespace kolbenV2
 
         [ClientEvent("kick")]
         public void test(Player client, string [] args)
-        {
-            if(args.Length == 0)
-            {
-                return;
-            }
+        {          
             if (client.IsAdmin)
             {
-                foreach(Player player in Alt.GetAllPlayers())
+                if (args.Length != 2)
+                {
+                    client.SendNotificationRed("/kick (name) (reason)");
+                    return;
+                }
+                foreach (Player player in Alt.GetAllPlayers())
                 {
                     if (player.LoggedIn == false)
                     {
@@ -232,6 +259,7 @@ namespace kolbenV2
                     }
                     if (player.PlayerName == args[0])
                     {
+                        Chat.GloabAdminMessage($"{player.PlayerName} wurde gebannt! Grund: {args[1]}");
                         player.Kick("kicked");
                         return;
                     }

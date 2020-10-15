@@ -17,7 +17,8 @@ namespace kolbenV2
         public List<Team> Teams { get; set; }
         public System.Timers.Timer Timer { get; set; }
         public System.Timers.Timer FlagTimer { get; set; }
-        public int Time = 300000;
+        public Position Center { get; set; }
+        public int Time = 900000;
         public Stopwatch Stopwatch = new Stopwatch();
         public List<Position> Flags = new List<Position>();
         public Gangfight()
@@ -37,6 +38,7 @@ namespace kolbenV2
             this.LoadFlagPositions();
             this.LoadGangfight();
             Data.CurrentGangfight = this;
+            this.Center = new Position((this.Attacker.Spawn.X + this.Defender.Spawn.X) / 2, (this.Attacker.Spawn.Y + this.Defender.Spawn.Y) / 2, ((this.Attacker.Spawn.Z + this.Defender.Spawn.Z) / 2) - 40);
         }
 
         public void SendMessage(string mess)
@@ -50,7 +52,7 @@ namespace kolbenV2
         public void StartFlagTimer()
         {
             this.FlagTimer = new System.Timers.Timer();
-            this.FlagTimer.Interval = 5000;
+            this.FlagTimer.Interval = 30000;
             this.FlagTimer.Elapsed += new ElapsedEventHandler(CheckPlayer);
             this.FlagTimer.Start();
             this.FlagTimer.AutoReset = true;
@@ -59,10 +61,12 @@ namespace kolbenV2
 
         public void AddPlayer(Player player)
         {
+            player.InGangfight = true;
             player.Dimension = 1000;
             this.LoadBlips(player);
             this.LoadFlags(player);
             this.LoadHud(player);
+            this.LoadZone(player);
             player.SendNotificationGreen("Beigetreten!");
             player.Emit("gangfight:textlabel", 0, 0, 0, "");
             this.Teams.ForEach(team =>
@@ -82,7 +86,7 @@ namespace kolbenV2
                 {
                     team.TeamMember.ForEach(player =>
                     {
-                        if (player.Position.Distance(flag) <= 10)
+                        if (player.Position.Distance(flag) <= 5)
                         {
                             this.AddGangFightPoints(player.PlayerTeam, 5);
                         }
@@ -133,29 +137,36 @@ namespace kolbenV2
         {
             if(this.Attacker.GangfightPoints > this.Defender.GangfightPoints)
             {
-                Chat.GlobalMessage($"{this.Attacker.Name} hat den Gangfight gewonnen");
+                Chat.GloabAdminMessage($"{this.Attacker.Name} hat den Gangfight gewonnen");
             }
             else if (this.Attacker.GangfightPoints < this.Defender.GangfightPoints)
             {
-                Chat.GlobalMessage($"{this.Defender.Name} hat den Gangfight gewonnen");
+                Chat.GloabAdminMessage($"{this.Defender.Name} hat den Gangfight gewonnen");
             }
             else if(this.Attacker.GangfightPoints == this.Defender.GangfightPoints)
             {
-                Chat.GlobalMessage($"Der Gangfight gieng unentschieden aus");
+                Chat.GloabAdminMessage($"Der Gangfight gieng unentschieden aus");
             }
             this.FlagTimer.Stop();
             this.FlagTimer.AutoReset = false;
+            foreach (Player player in Alt.GetAllPlayers())
+            {
+                if (player.CurrentMode == "team")
+                {
+                    if (player.PlayerTeam.InGangfight)
+                    {
+                        player.Emit("destroyGangfightBlip");
+                        player.DestroyMarker("gangfight");
+                        player.DestroyMarker("gangfight:zone");
+                        player.Emit("hide:gangfight:HUD");
+                        player.SetTeamSelect();
+                    }
+                }
+            }
             this.Teams.ForEach(team => { 
                 team.GangfightPoints = 0;
                 team.InGangfight = false;
-            });
-            foreach(Player player in Alt.GetAllPlayers())
-            {
-                player.Emit("destroyGangfightBlip");
-                player.DestroyMarker("gangfight");
-                player.Emit("hide:gangfight:HUD");
-                player.SetTeamSelect();
-            }
+            });           
             Data.CurrentGangfight = null;
         }
 
@@ -181,9 +192,14 @@ namespace kolbenV2
             });
         }
 
+        public void LoadZone(Player player)
+        {
+            player.CreateMarker("gangfight:zone", 1, new Position(this.Center.X, this.Center.Y, this.Center.Z), this.Attacker.Spawn.Distance(this.Defender.Spawn) * 2, 400, 255, 51, 51, 100);
+        }
+
         public void LoadBlips(Player player)
         {
-            this.Flags.ForEach(flag => { player.Emit("setBlip", 150, 1, flag.X, flag.Y, flag.Z, $"Gangfight", "gangfight"); });
+            this.Flags.ForEach(flag => { player.Emit("setBlip", 379, player.PlayerTeam.BlibColor, flag.X, flag.Y, flag.Z, $"Gangfight", "gangfight"); });
         }
 
         public void LoadHud(Player player)

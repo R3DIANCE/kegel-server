@@ -33,6 +33,7 @@ namespace kolbenV2
         public int DuellWins = 0;
         public bool InCircle = false;
         public bool InAduty = false;
+        public bool InGangfight = false;
         public Duell CurrentDuell { get; set; }
         public Random rnd = new Random();
         public BattleRoyale CurrentLobby { get; set; }
@@ -287,7 +288,10 @@ namespace kolbenV2
 
         public void DestroyMarker(string name)
         {
-            this.Emit("markers:Delete", name);
+            if (this.Exists)
+            {
+                this.Emit("markers:Delete", name);
+            }         
         }
     }
 }

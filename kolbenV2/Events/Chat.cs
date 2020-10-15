@@ -43,5 +43,16 @@ namespace kolbenV2
                 player.SendNotification(message);
             }
         }
+
+        public static void GloabAdminMessage(string mess)
+        {
+            foreach (Player players in Alt.GetAllPlayers())
+            {
+                if (players.LoggedIn)
+                {
+                    players.Emit("admin:message", mess);
+                }
+            }
+        }
     }
 }

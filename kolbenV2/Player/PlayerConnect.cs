@@ -14,7 +14,10 @@ namespace kolbenV2
         [ScriptEvent(ScriptEventType.PlayerConnect)]
         public void OnPlayerConnect(Player player, string reason)
         {
-            //test111111111111111
+            if (IsBanned(player))
+            {
+                player.Kick("banned.. ");
+            }
             player.MaxArmor = 100;
             player.MaxHealth = 200;
             player.Model = 0x705E61F2;
@@ -62,6 +65,18 @@ namespace kolbenV2
             else
             {
                 return true;
+            }
+        }
+
+        public bool IsBanned(Player player)
+        {
+            if (db.SelectInt($"SELECT * FROM banned_accounts WHERE socialclubid ={player.SocialClubId}", "socialclubid") != 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

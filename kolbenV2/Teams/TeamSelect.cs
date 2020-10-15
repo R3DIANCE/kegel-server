@@ -20,7 +20,10 @@ namespace kolbenV2
             {
                 if (player.PlayerTeam.InGangfight)
                 {
-                    player.SendNotificationRed("Du bist im Gangfight...");
+                    if (player.InGangfight)
+                    {
+                        player.SendNotificationRed("Du bist im Gangfight...");
+                    }                 
                     return;
                 }
             }
@@ -58,16 +61,17 @@ namespace kolbenV2
         public void joinTeam(Player player, int teamId)
         {
             Team team = Data.Teams[teamId];
-            if (team.InGangfight)
-            {
-                if(team.TeamMember.Count > Data.CurrentGangfight.OtherTeam(team).TeamMember.Count)
-                {
-                    player.SendNotificationRed($"Trete {Data.CurrentGangfight.OtherTeam(team).Name} bei, damit die Teams ausgeglichen sind!");
-                    return;
-                }                               
-            }
+            //if (team.InGangfight)
+            //{
+            //    if(team.TeamMember.Count > Data.CurrentGangfight.OtherTeam(team).TeamMember.Count)
+            //    {
+            //        player.SendNotificationRed($"Trete {Data.CurrentGangfight.OtherTeam(team).Name} bei, damit die Teams ausgeglichen sind!");
+            //        return;
+            //    }                               
+            //}
             team.AddPlayer(player);
             player.TeamSelectOpen = false;
+            player.Emit("close:teamselect");
         }
 
         [ClientEvent("joinDeathmatch")]
@@ -75,6 +79,7 @@ namespace kolbenV2
         {
             Data.DmTeams[teamId].AddPlayer(player);
             player.TeamSelectOpen = false;
+            player.Emit("close:teamselect");
         }
     }
 }
