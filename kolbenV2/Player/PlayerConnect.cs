@@ -14,7 +14,7 @@ namespace kolbenV2
         [ScriptEvent(ScriptEventType.PlayerConnect)]
         public void OnPlayerConnect(Player player, string reason)
         {
-            //test
+            //test111111111111111
             player.MaxArmor = 100;
             player.MaxHealth = 200;
             player.Model = 0x705E61F2;
