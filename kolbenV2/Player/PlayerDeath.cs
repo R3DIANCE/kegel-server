@@ -94,7 +94,7 @@ namespace kolbenV2
                 {
                     killer.SendNotificationRed("3 Mal VDM Haaaaide");
                     killer.Kick("VDM");
-                    Chat.GlobalMessage($"{killer.PlayerName} wurde aufgrund von VDM gegickt!");
+                    Chat.GlobalMessage($"{killer.PlayerName} wurde aufgrund von VDM gekickt!");
                 }
                 else
                 {

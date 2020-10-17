@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>C:\Users\pstie\Desktop\altv-kolben\resources\kolben\</OutputPath>
+    <OutputPath>C:\Users\Roman\Desktop\p\resources\server\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
