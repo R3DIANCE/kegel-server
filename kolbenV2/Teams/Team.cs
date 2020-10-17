@@ -19,6 +19,7 @@ namespace kolbenV2
         public List<Player> TeamMember = new List<Player>();
         public Position Garage { get; set; }
         public Position GarageSpawn { get; set; }
+        public IColShape SpawnColShape { get; set; }
         public float GarageSpawnHeading { get; set; }
         public string GaragePed { get; set; }
         public float NPCHeading { get; set; }
@@ -42,8 +43,9 @@ namespace kolbenV2
             LoadTeam();            
         }
 
+        
         public void AddPlayer(Player player)
-        {
+        {           
             if (this.InGangfight)
             {
                 player.Emit("gangfight:textlabel", this.Spawn.X, this.Spawn.Y, this.Spawn.Z, "Gangfight beitreten (E)");
@@ -51,9 +53,17 @@ namespace kolbenV2
             else
             {
                 player.Emit("gangfight:textlabel", this.Spawn.X, this.Spawn.Y, this.Spawn.Z, "Gangfight starten (E)");
-            }           
+            }
+            foreach(KeyValuePair<int, Team> entry in Data.Teams)
+            {
+                player.DestroyMarker(entry.Value.Name + "SPAWNZONE");
+                if(entry.Value != this)
+                {                    
+                    player.CreateMarker(entry.Value.Name + "SPAWNZONE", 1, new Position(entry.Value.Spawn.X, entry.Value.Spawn.Y, entry.Value.Spawn.Z - 20), 40f, 50f, 255, 0, 0, 50);
+                }
+            }      
             this.SendTeamMessage($"{player.PlayerName} ist deinem Team beigetreten!");
-            player.SendNotificationCustom($"Du bist {this.Name} beigetreten!", this.NativeColor);
+            player.SendNotificationCustom($"Du bist {this.Name} beigetreten!", this.CssColor);
             this.TeamMember.Add(player);
             Alt.EmitAllClients("loadTeamMemeberCount", this.Id, this.TeamMember.Count);
             player.Position = this.Spawn;
@@ -71,7 +81,7 @@ namespace kolbenV2
 
         public void SendTeamMessage(string msg)
         {
-            this.TeamMember.ForEach(player => { player.SendNotificationCustom(msg, this.NativeColor); });
+            this.TeamMember.ForEach(player => { player.SendNotificationCustom(msg, this.CssColor); });
         }
 
         public void LoadTeam()
@@ -86,7 +96,14 @@ namespace kolbenV2
             this.BlibColor = db.SelectInt($"SELECT * FROM team WHERE id={this.Id}", "blib_color");
             this.NativeColor = db.SelectInt($"SELECT * FROM team WHERE id={this.Id}", "native_color");
             this.VehicleColor = db.SelectInt($"SELECT * FROM garages_spawns WHERE teamid={this.Id}", "color");
-            LoadGarage();
+            this.LoadGarage();
+            this.LoadSpawnColShape();
+        }
+
+        public void LoadSpawnColShape()
+        {
+            this.SpawnColShape = Alt.CreateColShapeCircle(this.Spawn, 20f);
+            this.SpawnColShape.SetData("SPAWNZONE", this.Id);
         }
 
         public void LoadGarage()
@@ -104,7 +121,7 @@ namespace kolbenV2
             this.GarageSpawn = new Position(spawnX, spawnY, spawnZ);
             this.GarageSpawnHeading = db.SelectFloat($"SELECT * FROM garages_spawns WHERE id={this.Id}", "spawn_heading");
             IColShape shape = Alt.CreateColShapeCircle(this.Garage, 5f);
-            shape.SetData("TEAM", this.Id);
+            shape.SetData("GARAGE", this.Id);
         }
 
         public async void SpawnTeamVehicle(Player player, uint model)
@@ -123,15 +140,10 @@ namespace kolbenV2
             teamVeh.SecondaryColor = (byte)this.VehicleColor;
             teamVeh.NumberplateText = player.PlayerName;
             await Task.Delay(200);
-            if (player.Exists)
+            if (player.Exists && teamVeh.Exists)
             {
                 player.Emit("setPlayerIntoVehicle", teamVeh);
             }       
-        }
-
-        public void VehicleDestroyTimer()
-        {
-
         }
 
         public void SetTeamClothes(Player player)

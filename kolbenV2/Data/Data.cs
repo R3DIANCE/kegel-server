@@ -22,5 +22,6 @@ namespace kolbenV2
         public static Dictionary<int, List<Position>> BattleRoyaleItemSpawns = new Dictionary<int, List<Position>>();
         public static Dictionary<int, CarShopVehicle> CarShopVehicles = new Dictionary<int, CarShopVehicle>();
         public static Gangfight CurrentGangfight = null;
+        public static bool EMPActive = false;
     }
 }

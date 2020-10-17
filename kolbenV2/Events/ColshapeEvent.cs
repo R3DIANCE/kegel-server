@@ -40,7 +40,7 @@ namespace kolbenV2
                         }
                     }
                 }
-                if (shape.GetData("TEAM", out int id))
+                if (shape.GetData("GARAGE", out int id))
                 {
                     if (player.CurrentMode == "team")
                     {
@@ -49,6 +49,25 @@ namespace kolbenV2
                             if (state)
                             {
                                 player.SendNotificationGreen("E um ein Fahrzeug aus zu parken..");
+                            }
+                        }
+                    }
+                }
+                if (shape.GetData("SPAWNZONE", out int spawnZoneId))
+                {
+                    if (player.CurrentMode == "team")
+                    {
+                        if (player.TeamId != spawnZoneId)
+                        {
+                            if (state)
+                            {
+                                player.SendNotificationRed("Du befindest dich in einem Gegnerischen Spawn.. verschwinde oder du wirst gegickt..");
+                                player.StartInSpawnZoneTimer();
+                            }
+                            else
+                            {
+                                player.InOtherTeamZone = false;
+                                player.SendNotificationGreen("Wieder außerhalb dem Spawn.");
                             }
                         }
                     }

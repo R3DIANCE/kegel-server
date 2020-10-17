@@ -45,7 +45,6 @@ namespace kolbenV2
         {
             this.Teams.ForEach(team => { 
                 team.SendTeamMessage(mess);
-                team.InGangfight = true;
             });
         }
 

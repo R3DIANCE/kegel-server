@@ -100,7 +100,6 @@ namespace kolbenV2
             db.LoadBattleRoyaleItem();
             db.LoadBattleRoyaleMaps();
             db.LoadBattleRoyaleItemSpawns();
-
             db.LoadVehicleShop();
 
             for (int i = 0; i < db.ColumnCount("SELECT * FROM `team`"); i++)
@@ -118,9 +117,7 @@ namespace kolbenV2
             }
             db.LoadDuell();
         }
-
-        
-
+       
         public override void OnStop()
         {
 

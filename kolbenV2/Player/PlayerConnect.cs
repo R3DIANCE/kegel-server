@@ -14,9 +14,14 @@ namespace kolbenV2
         [ScriptEvent(ScriptEventType.PlayerConnect)]
         public void OnPlayerConnect(Player player, string reason)
         {
+            //test
             if (IsBanned(player))
             {
                 player.Kick("banned.. ");
+            }
+            if (Data.EMPActive)
+            {
+                player.Emit("toogle:city:lights", true);
             }
             player.MaxArmor = 100;
             player.MaxHealth = 200;
@@ -27,7 +32,6 @@ namespace kolbenV2
             player.LoadTeams();           
             if (AccountExist(player))
             {
-                player.LoadPlayer();
                 OpenLogin(player);
             }
             else
@@ -56,7 +60,6 @@ namespace kolbenV2
 
         public bool AccountExist(IPlayer player)
         {
-
             int id = db.SelectInt($"SELECT * FROM accounts WHERE socialid ={player.SocialClubId}", "socialid");
             if(id == 0)
             {

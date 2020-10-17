@@ -89,7 +89,14 @@ namespace kolbenV2
             {
                 return;
             }
-            player.Emit("EmitWeb", "open:progressbar");
+            if(player.CurrentMode == "team")
+            {
+                player.Emit("EmitWeb", "open:progressbar", player.PlayerTeam.CssColor);
+            }
+            else
+            {
+                player.Emit("EmitWeb", "open:progressbar", "black");
+            }
             player.SendNotification("Du benutzt einen Verbandskasten..");
             player.PlayAnimation("anim@heists@narcotics@funding@gang_idle", "gang_chatting_idle01", 4000);
             player.Animating = true;
@@ -117,7 +124,14 @@ namespace kolbenV2
             {
                 return;
             }
-            player.Emit("EmitWeb", "open:progressbar");
+            if (player.CurrentMode == "team")
+            {
+                player.Emit("EmitWeb", "open:progressbar", player.PlayerTeam.CssColor);
+            }
+            else
+            {
+                player.Emit("EmitWeb", "open:progressbar", "black");
+            }
             player.SendNotification("Du benutzt eine Weste..");
             player.PlayAnimation("anim@heists@narcotics@funding@gang_idle", "gang_chatting_idle01", 4000);
             player.Animating = true;

@@ -38,8 +38,8 @@ namespace kolbenV2
         public Random rnd = new Random();
         public BattleRoyale CurrentLobby { get; set; }
         public IVehicle CarShopVehicle = null;
-        public Dictionary<string, MarkerHandler> MarkerId = new Dictionary<string, MarkerHandler>();
         public List<CarShopVehicle> PlayerVehicles = new List<CarShopVehicle>();
+        public bool InOtherTeamZone = false;
 
         public Player(IntPtr nativePointer, ushort id) : base(nativePointer, id)
         {
@@ -65,26 +65,26 @@ namespace kolbenV2
 
         public void SendNotification(string not)
         {
-            //player.Emit("sendNotify", not);
-            this.Emit("sendNotification", not);
+            this.Emit("sendNotificationColor", not);
+            //this.Emit("sendNotification", not);
         }
 
         public void SendNotificationRed(string not)
         {
-            //player.Emit("sendNotifyColor", not, "red");
-            this.Emit("sendNotificationColor", not, 6);
+            this.Emit("sendNotificationColor", not, "red-not");
+            //this.Emit("sendNotificationColor", not, 6);
         }
 
         public void SendNotificationGreen(string not)
         {
-            //player.Emit("sendNotifyColor", not, "green");
-            this.Emit("sendNotificationColor", not, 210);
+            this.Emit("sendNotificationColor", not, "green-not");
+            //this.Emit("sendNotificationColor", not, 210);
         }
 
-        public void SendNotificationCustom(string not, int color)
+        public void SendNotificationCustom(string not, string color)
         {
-            //player.Emit("sendNotifyColor", not, color);
             this.Emit("sendNotificationColor", not, color);
+            //this.Emit("sendNotificationColor", not, color);
         }
 
         public Team GetTeam()
@@ -292,6 +292,49 @@ namespace kolbenV2
             {
                 this.Emit("markers:Delete", name);
             }         
+        }
+
+        public async void StartInSpawnZoneTimer()
+        {
+            this.InOtherTeamZone = true;
+            if (this.InOtherTeamZone == false)
+            {
+                return;
+            }
+            this.SendNotificationRed("5");           
+            await Task.Delay(1000);
+            if (this.InOtherTeamZone == false)
+            {
+                return;
+            }
+            this.SendNotificationRed("4");
+            await Task.Delay(1000);
+            if (this.InOtherTeamZone == false)
+            {
+                return;
+            }
+            this.SendNotificationRed("3");
+            await Task.Delay(1000);
+            if (this.InOtherTeamZone == false)
+            {
+                return;
+            }
+            this.SendNotificationRed("2");
+            if (this.InOtherTeamZone == false)
+            {
+                return;
+            }
+            await Task.Delay(1000);
+            this.SendNotificationRed("1");
+            await Task.Delay(1000);
+            if (this.Exists)
+            {
+                if (this.InOtherTeamZone)
+                {                   
+                    Chat.GloabAdminMessage(this.PlayerName + "wurde vom Server gekickt. Grund: Spawncamping");
+                    this.Kick("SPAWNCAMPING");
+                }
+            }            
         }
     }
 }

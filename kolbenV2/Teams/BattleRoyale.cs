@@ -99,7 +99,7 @@ namespace kolbenV2
             IVehicle veh = await AltAsync.Do(() => Alt.CreateVehicle((uint)VehicleModel.Revolter, this.LobbySpawn, player.Rotation));
             veh.Dimension = player.Id + 1000;
             player.Dimension = player.Id + 1000;
-            await Task.Delay(500);
+            await Task.Delay(200);
             if (player.Exists)
             {
                 if (veh.Exists)
