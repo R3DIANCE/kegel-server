@@ -92,8 +92,7 @@ namespace kolbenV2
                 killer.VehicleKills += 1;
                 if (killer.VehicleKills >= 3)
                 {
-                    killer.SendNotificationRed("3 Mal VDM Haaaaide");
-                    killer.Kick("VDM");
+                    killer.Kick("3 Mal VDM ciao bre");
                     Chat.GlobalMessage($"{killer.PlayerName} wurde aufgrund von VDM gekickt!");
                 }
                 else
