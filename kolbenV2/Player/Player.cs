@@ -253,9 +253,7 @@ namespace kolbenV2
         {
             this.GiveWeapon(WeaponModel.AssaultRifle, 1000, true);
             this.GiveWeapon(WeaponModel.AdvancedRifle, 1000, true);
-            this.GiveWeapon(WeaponModel.CarbineRifle, 1000, true);
             this.GiveWeapon(WeaponModel.BullpupRifle, 1000, true);
-            this.GiveWeapon(WeaponModel.BullpupShotgun, 1000, true);
             this.GiveWeapon(WeaponModel.GusenbergSweeper, 1000, true);
             this.GiveWeapon(WeaponModel.CombatPDW, 1000, false);
             this.GiveWeapon(WeaponModel.Pistol50, 1000, false);
