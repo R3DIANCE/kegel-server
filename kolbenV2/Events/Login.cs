@@ -16,7 +16,7 @@ namespace kolbenV2
         {
             if (username.Length > 12)
             {
-                player.Emit("login:notify", "Mehr als 12 Charakter");
+                player.Emit("login:notify", "Mehr als 12 Zeichen");
                 return;
             }
             if (username == "")
