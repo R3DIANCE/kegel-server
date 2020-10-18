@@ -50,13 +50,13 @@ namespace kolbenV2
                 switch (killer.KillStreak)
                 {
                     case 3:
-                        Chat.GlobalMessage($"{killer.PlayerName} ist auf einer 3er Killstreak!");
+                        Chat.GlobalMessage($"{killer.PlayerName} ist auf einer 3er Killstreak");
                         break;
                     case 5:
-                        Chat.GlobalMessage($"{killer.PlayerName} ist auf einer 5er Killstreak!");
+                        Chat.GlobalMessage($"{killer.PlayerName} ist auf einer 5er Killstreak");
                         break;
                     case 10:
-                        Chat.GlobalMessage($"{killer.PlayerName} ist auf einer 10er Killstreak!");
+                        Chat.GlobalMessage($"{killer.PlayerName} ist auf einer 10er Killstreak");
                         break;
 
                 }
