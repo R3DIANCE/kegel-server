@@ -49,8 +49,8 @@ namespace kolbenV2
             AcceptTimer.Start();
             AcceptTimer.AutoReset = false;
             attacker.SendNotificationGreen($"Du hast {defender.PlayerName} eine Duell Anfrage geschickt");
-            defender.Emit("sendMessage", $"Dir wurde eine Duell Anfrage von {attacker.PlayerName} geschickt, /accept um anzunehmen!");
-            defender.SendNotificationGreen($"Dir wurde eine Duell Anfrage von {attacker.PlayerName} geschickt, /accept um anzunehmen!");
+            defender.Emit("sendMessage", $"Dir wurde eine Duell Anfrage von {attacker.PlayerName} geschickt, /accept um anzunehmen");
+            defender.SendNotificationGreen($"Dir wurde eine Duell Anfrage von {attacker.PlayerName} geschickt, /accept um anzunehmen");
             this.Lobby.ForEach(player => { player.CurrentDuell = this; });
         }
 
